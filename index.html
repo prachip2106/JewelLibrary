@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JewelLibrary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+  <!-- INITIAL LOADER -->
+  <div class="loader" id="loader">
+    <div class="loader-ring"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-ornament">
+      <div class="logo-line"></div>
+      <div class="logo-diamond"></div>
+      <div class="logo-line right"></div>
+    </div>
+    <h1>Jewel<span>Library</span></h1>
+    <p class="subtitle">A curated collection of fine jewellery</p>
+    <div class="header-rule"></div>
+  </header>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-inner">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search rings, necklaces, earrings..." autocomplete="off"/>
+      <button class="clear-btn" id="clearBtn" title="Clear search">x</button>
+    </div>
+  </div>
+
+  <!-- CATEGORY PILLS -->
+  <div class="cats-wrap" id="catsWrap">
+    <button class="cat-pill active" data-cat="">All</button>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-count" id="statsCount">Loading...</div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="gridViewBtn" title="Grid view">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="0" y="0" width="7" height="7"/><rect x="9" y="0" width="7" height="7"/>
+          <rect x="0" y="9" width="7" height="7"/><rect x="9" y="9" width="7" height="7"/>
+        </svg>
+      </button>
+      <button class="view-btn" id="listViewBtn" title="List view">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
+          <rect x="0" y="1" width="16" height="2.5"/>
+          <rect x="0" y="6.5" width="16" height="2.5"/>
+          <rect x="0" y="12" width="16" height="2.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-wrap">
+    <div id="gallery"></div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2025 &nbsp;&middot;&nbsp; JewelLibrary &nbsp;&middot;&nbsp; Fine Jewellery Collection
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightboxClose">&times;</button>
+      <img class="lightbox-img" id="lightboxImg" src="" alt=""/>
+      <div class="lightbox-info">
+        <div>
+          <div class="lightbox-name" id="lightboxName"></div>
+          <div class="lightbox-type" id="lightboxType"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>
