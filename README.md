@@ -58,7 +58,7 @@ Open `frontend/index.html` in your browser.
 
 ---
 
-## 🔗 API Endpoints
+## API Endpoints
 
 * `/api/jewelry` → Get all items
 * `/api/jewelry?search=ring` → Search items
@@ -67,7 +67,7 @@ Open `frontend/index.html` in your browser.
 
 ---
 
-## ⚠️ Note
+## Note
 
 * Dataset is not included due to large size
 * Images are served locally via backend
@@ -75,11 +75,6 @@ Open `frontend/index.html` in your browser.
 
 ---
 
-## 📸 Screenshot
-
-!![Homepage](d:/JewwlLibrary/frontend/assets/index.png)
-
----
 
 ## Author
 
