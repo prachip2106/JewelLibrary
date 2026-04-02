@@ -77,7 +77,7 @@ Open `frontend/index.html` in your browser.
 
 ## 📸 Screenshot
 
-![Homepage](frontend/assets/home.png)
+!![Homepage](frontend/assets/index.png)
 
 ---
 
