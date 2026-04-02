@@ -77,7 +77,7 @@ Open `frontend/index.html` in your browser.
 
 ## 📸 Screenshot
 
-!![Homepage](frontend/assets/index.png)
+!![Homepage](d:/JewwlLibrary/frontend/assets/index.png)
 
 ---
 
