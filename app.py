@@ -113,13 +113,3 @@ def get_jewelry(category: str = "", search: str = "", page: int = 1, limit: int 
         "totalPages": (total + limit - 1) // limit if total > 0 else 1,
         "data": results[start:end]
     }
-
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
