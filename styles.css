@@ -496,3 +496,196 @@ footer {
   #gallery { grid-template-columns: repeat(2, 1fr); }
   h1 { letter-spacing: 0.12em; }
 }
+
+/* ── FAVOURITE NAV BUTTON ── */
+.fav-nav-btn {
+  position: absolute; top: 56px; right: 48px;
+  display: flex; align-items: center; gap: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.65rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 7px 16px 7px 12px;
+  cursor: pointer; border-radius: 1px;
+  transition: all 0.25s;
+  opacity: 0; animation: fadeIn 0.8s 1.1s ease forwards;
+}
+.fav-nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+.fav-nav-btn svg { flex-shrink: 0; transition: fill 0.2s; }
+.fav-nav-btn.has-favs { border-color: var(--gold-dim); color: var(--gold); }
+.fav-nav-btn.has-favs svg { fill: var(--gold); stroke: var(--gold); }
+
+.fav-nav-count {
+  background: var(--gold);
+  color: var(--deep);
+  font-size: 0.55rem; font-weight: 400;
+  min-width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.fav-nav-count.visible { opacity: 1; }
+
+/* ── HEART BUTTON ON CARD ── */
+.card-fav-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(14,12,9,0.6);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, border-color 0.2s, background 0.2s;
+  z-index: 5;
+}
+.card:hover .card-fav-btn { opacity: 1; }
+.card-fav-btn svg { width: 13px; height: 13px; stroke: var(--text-dim); fill: none; transition: all 0.2s; }
+.card-fav-btn:hover { border-color: var(--gold); background: rgba(14,12,9,0.85); }
+.card-fav-btn:hover svg { stroke: var(--gold); }
+.card-fav-btn.active { opacity: 1; border-color: var(--gold); background: rgba(201,168,76,0.15); }
+.card-fav-btn.active svg { fill: var(--gold); stroke: var(--gold); }
+
+/* ── LIGHTBOX FAV BUTTON ── */
+.lightbox-fav-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: all 0.25s;
+}
+.lightbox-fav-btn svg { stroke: var(--text-dim); fill: none; transition: all 0.2s; }
+.lightbox-fav-btn:hover { border-color: var(--gold); }
+.lightbox-fav-btn:hover svg { stroke: var(--gold); }
+.lightbox-fav-btn.active { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+.lightbox-fav-btn.active svg { fill: var(--gold); stroke: var(--gold); }
+
+/* ── FAVOURITES PANEL ── */
+.fav-backdrop {
+  position: fixed; inset: 0; z-index: 149;
+  background: rgba(10,8,5,0.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s;
+}
+.fav-backdrop.open { opacity: 1; pointer-events: all; }
+
+.fav-panel {
+  position: fixed; top: 0; right: -520px; bottom: 0;
+  width: 100%; max-width: 520px;
+  background: var(--dark);
+  border-left: 1px solid var(--border);
+  z-index: 150;
+  transition: right 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+  display: flex; flex-direction: column;
+}
+.fav-panel.open { right: 0; }
+
+.fav-panel-inner {
+  display: flex; flex-direction: column;
+  height: 100%; overflow: hidden;
+}
+
+.fav-panel-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.fav-panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; font-weight: 300;
+  color: var(--cream); letter-spacing: 0.08em;
+}
+.fav-panel-subtitle {
+  font-size: 0.62rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold-dim);
+  margin-top: 4px;
+}
+
+.fav-close-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-dim); font-size: 1.2rem;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.fav-close-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.fav-clear-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-dim); font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 5px 12px; cursor: pointer; border-radius: 1px;
+  transition: all 0.2s;
+}
+.fav-clear-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+.fav-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  overflow-y: auto;
+  padding: 2px;
+  flex: 1;
+}
+.fav-grid::-webkit-scrollbar { width: 4px; }
+.fav-grid::-webkit-scrollbar-track { background: var(--dark); }
+.fav-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.fav-card {
+  position: relative;
+  background: var(--mid);
+  aspect-ratio: 3/2;
+  overflow: hidden;
+  cursor: pointer;
+}
+.fav-card img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.4s;
+}
+.fav-card:hover img { transform: scale(1.05); }
+
+.fav-card-info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(14,12,9,0.9) 0%, transparent 100%);
+  padding: 14px 10px 8px;
+}
+.fav-card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem; color: var(--cream);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fav-card-type {
+  font-size: 0.55rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+}
+
+.fav-card-remove {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(14,12,9,0.7); border: 1px solid var(--border);
+  border-radius: 50%; width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-dim); font-size: 0.9rem;
+  opacity: 0; transition: all 0.2s;
+}
+.fav-card:hover .fav-card-remove { opacity: 1; }
+.fav-card-remove:hover { border-color: #c0392b; color: #c0392b; }
+
+.fav-empty {
+  grid-column: 1/-1;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 60px 24px;
+  color: var(--text-dim); text-align: center;
+}
+.fav-empty-icon { font-size: 2.5rem; opacity: 0.25; margin-bottom: 16px; }
+.fav-empty h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 300; color: var(--text); margin-bottom: 6px;
+}
+.fav-empty p { font-size: 0.7rem; letter-spacing: 0.1em; }
