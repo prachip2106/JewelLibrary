@@ -1,5 +1,6 @@
 const API_BASE = 'http://localhost:8000';
 const LIMIT = 15;
+const FAV_KEY = 'jewellibrary_favourites';
 
 let currentPage = 1;
 let currentSearch = '';
@@ -7,6 +8,7 @@ let currentCat = '';       // exact folder name, sent as ?category=
 let totalPages = 1;
 let searchTimer = null;
 let isListView = false;
+let currentLightboxItem = null;
 
 // ── DOM REFS ──
 const gallery      = document.getElementById('gallery');
@@ -24,6 +26,139 @@ const gridViewBtn  = document.getElementById('gridViewBtn');
 const listViewBtn  = document.getElementById('listViewBtn');
 const loader       = document.getElementById('loader');
 const toast        = document.getElementById('toast');
+const favNavBtn     = document.getElementById('favNavBtn');
+const favNavCount   = document.getElementById('favNavCount');
+const favPanel      = document.getElementById('favPanel');
+const favBackdrop   = document.getElementById('favBackdrop');
+const favCloseBtn   = document.getElementById('favCloseBtn');
+const favClearBtn   = document.getElementById('favClearBtn');
+const favGrid       = document.getElementById('favGrid');
+const favSubtitle   = document.getElementById('favSubtitle');
+
+// ── FAVOURITES (localStorage) ──
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveFavs(favs) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+}
+
+function isFav(item) {
+  return getFavs().some(f => f.image_url === item.image_url);
+}
+
+function toggleFav(item) {
+  let favs = getFavs();
+  const idx = favs.findIndex(f => f.image_url === item.image_url);
+  if (idx === -1) {
+    favs.push(item);
+    showToast('Added to Favourites');
+  } else {
+    favs.splice(idx, 1);
+    showToast('Removed from Favourites');
+  }
+  saveFavs(favs);
+  updateFavNavBtn();
+  syncAllHearts();
+  if (favPanel.classList.contains('open')) renderFavPanel();
+}
+
+function updateFavNavBtn() {
+  const count = getFavs().length;
+  favNavCount.textContent = count;
+  favNavCount.classList.toggle('visible', count > 0);
+  favNavBtn.classList.toggle('has-favs', count > 0);
+}
+
+// Sync heart state across all visible cards
+function syncAllHearts() {
+  document.querySelectorAll('.card-fav-btn').forEach(btn => {
+    const url = btn.dataset.url;
+    btn.classList.toggle('active', getFavs().some(f => f.image_url === url));
+  });
+  // sync lightbox button
+  if (currentLightboxItem) {
+    lightboxFavBtn.classList.toggle('active', isFav(currentLightboxItem));
+  }
+}
+
+// ── FAVOURITES PANEL ──
+function openFavPanel() {
+  renderFavPanel();
+  favPanel.classList.add('open');
+  favBackdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFavPanel() {
+  favPanel.classList.remove('open');
+  favBackdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderFavPanel() {
+  const favs = getFavs();
+  favSubtitle.textContent = `${favs.length} piece${favs.length !== 1 ? 's' : ''} saved`;
+  favGrid.innerHTML = '';
+
+  if (!favs.length) {
+    favGrid.innerHTML = `
+      <div class="fav-empty">
+        <div class="fav-empty-icon">♡</div>
+        <h3>No Favourites Yet</h3>
+        <p>Tap the heart on any piece to save it here.</p>
+      </div>`;
+    return;
+  }
+
+  favs.forEach(item => {
+    const namePretty = item.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+    const typePretty = item.type.replace(/[-_]/g, ' ');
+
+    const card = document.createElement('div');
+    card.className = 'fav-card';
+
+    const img = document.createElement('img');
+    img.src = `${API_BASE}${item.image_url}`;
+    img.alt = namePretty;
+    img.loading = 'lazy';
+
+    const info = document.createElement('div');
+    info.className = 'fav-card-info';
+    info.innerHTML = `<div class="fav-card-name">${namePretty}</div><div class="fav-card-type">${typePretty}</div>`;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'fav-card-remove';
+    removeBtn.title = 'Remove';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFav(item);
+    });
+
+    card.appendChild(img);
+    card.appendChild(info);
+    card.appendChild(removeBtn);
+    card.addEventListener('click', () => {
+      closeFavPanel();
+      openLightbox(item, namePretty, typePretty);
+    });
+    favGrid.appendChild(card);
+  });
+}
+
+favNavBtn.addEventListener('click', openFavPanel);
+favCloseBtn.addEventListener('click', closeFavPanel);
+favBackdrop.addEventListener('click', closeFavPanel);
+favClearBtn.addEventListener('click', () => {
+  saveFavs([]);
+  updateFavNavBtn();
+  syncAllHearts();
+  renderFavPanel();
+  showToast('Favourites cleared');
+});
 
 // ── INIT ──
 async function init() {
@@ -144,6 +279,31 @@ function renderGallery(items) {
 
     card.appendChild(img);
     card.appendChild(overlay);
+    card.appendChild(corner);
+    card.addEventListener('click', () => openLightbox(item, namePretty, typePretty));
+    gallery.appendChild(card);
+  });
+}
+
+// ── HEART BUTTON ──
+    const heartBtn = document.createElement('button');
+    heartBtn.className = 'card-fav-btn' + (isFav(item) ? ' active' : '');
+    heartBtn.dataset.url = item.image_url;
+    heartBtn.title = 'Add to Favourites';
+    heartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>`;
+    heartBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFav(item);
+    });
+
+    const corner = document.createElement('div');
+    corner.className = 'card-corner';
+
+    card.appendChild(img);
+    card.appendChild(overlay);
+    card.appendChild(heartBtn);
     card.appendChild(corner);
     card.addEventListener('click', () => openLightbox(item, namePretty, typePretty));
     gallery.appendChild(card);
